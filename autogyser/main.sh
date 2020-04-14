@@ -8,6 +8,19 @@ dirs=()
 cnt=0
 declare -A sed_script
 
+mk_parentdir() {
+	mkdir -p "$1"
+	rmdir "$1"
+}
+
+is_file_busy() {
+	res=$(lsof -f -- "$1")
+	if [[ "$res" == "" ]]; then
+		return 0
+	fi
+	return 1
+}
+
 # Interpret configuration file
 while IFS="" read -r line || [ -n "$line" ]; do
 
@@ -44,8 +57,33 @@ while [[ true ]]; do
 		for ((i = 0; i < ${#src_files[@]}; ++i)); do
 			src=${src_files[i]}
 			dst=${dst_files[i]}
+
 			if [[ "$src" != "$dst" ]]; then
-				printf "%s\n%s\n\n" "${src_files[i]}" "${dst_files[i]}"
+				printf "\nMove %s\nto %s\n" "$src" "$dst"
+				is_file_busy "$src"
+				if [[ $? == 1 ]]; then
+					printf "(file is busy)\n"
+					printf "y/[n]? "
+					read action
+
+					# Set to default
+					if [[ "$action" != "y" ]]; then
+						action="n"
+					fi
+				else
+					printf "[y]/n? "
+					read action
+
+					# Set to default
+					if [[ "$action" != "n" ]]; then
+						action="y"
+					fi
+				fi
+				
+				if [[ "$action" == "y" ]]; then
+					mk_parentdir "$dst"
+					mv "$src" "$dst"
+				fi
 			fi
 		done
 
