@@ -6,11 +6,11 @@
 home="\/home\/$USER"
 
 # Directory to watch for changes
-dir "$HOME/Downloads/test"
+dir "$HOME/Downloads"
 
 # SED supported regex rules to move, i.e. rename files
-rule ".*\/([^\/]+).(mp4|mkv)" "$home\/Videos\/\1.\2"
-rule ".*\/([^\/]+).(jpg|png)" "$home\/Pictures\/\1.\2"
+rule ".*\/([^\/]+).(mp4|mkv)$" "$home\/Videos\/\1.\2"
+rule ".*\/([^\/]+).(jpg|png)$" "$home\/Pictures\/\1.\2"
 
 
 # Another variable 
@@ -20,8 +20,8 @@ root="$home\/Books\/"
 dir "$HOME/Books"
 
 # Rules for this directory
-rule "($root)(comics\/|)(.*).(cbr|cbz)" "\1comics\/\3.\4"
-rule "($root)(docs\/|)(.*).(pdf|doc)" "\1docs\/\3.\4"
+rule "($root)(comics\/|)(.*).(cbr|cbz)$" "\1comics\/\3.\4"
+rule "($root)(docs\/|)(.*).(pdf|doc)$" "\1docs\/\3.\4"
 
 
 # More variables
