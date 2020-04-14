@@ -29,7 +29,7 @@ while IFS="" read -r line || [ -n "$line" ]; do
 		if [[ "$dir" != "" ]]; then
 			src=$(eval "echo \"${BASH_REMATCH[1]}\"")
 			dst=$(eval "echo \"${BASH_REMATCH[2]}\"")
-			sed_script[$dir]+="s/$src/$dst/; "
+			sed_script[$dir]+="s/$src/$dst/;t; "
 			((cnt++))
 		fi
 
