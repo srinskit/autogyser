@@ -34,14 +34,21 @@ done <$conf
 
 while [[ true ]]; do
 	for dir in "${dirs[@]}"; do
-		echo "$dir" "${sed_script[$dir]}"
-		src_files=$(find $dir -type f)
-		dst_files=$(sed -E "${sed_script[$dir]}" <<<$src_files)
-		echo "----------"
-		echo "$src_files"
-		echo "----------"
-		echo "$dst_files"
-		echo
+		echo ">>>" $dir ${sed_script[$dir]}
+
+		find_data=$(find $dir -type f)
+		IFS=$'\n' read -r -d '' -a src_files <<<$find_data
+		sed_data=$(sed -E "${sed_script[$dir]}" <<<$find_data)
+		IFS=$'\n' read -r -d '' -a dst_files <<<$sed_data
+
+		for ((i = 0; i < ${#src_files[@]}; ++i)); do
+			src=${src_files[i]}
+			dst=${dst_files[i]}
+			if [[ "$src" != "$dst" ]]; then
+				printf "%s\n%s\n\n" "${src_files[i]}" "${dst_files[i]}"
+			fi
+		done
+
 	done
 	break
 done
