@@ -1,6 +1,6 @@
 #!/bin/bash
 
-conf="organiser.conf"
+conf=$1
 sleep_for=1
 dir=""
 
