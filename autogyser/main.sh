@@ -1,7 +1,32 @@
 #!/bin/bash
 
-conf=$1
-sleep_for=1
+interactive=0
+conf=""
+
+while getopts ":c::i" opt; do
+	case $opt in
+	c)
+		conf=$OPTARG
+		;;
+	i)
+		interactive=1
+		;;
+	\?)
+		printf "Invalid option: -$OPTARG" >&2
+		exit 1
+		;;
+	:)
+		printf "Option -$OPTARG requires an argument" >&2
+		exit 1
+		;;
+	esac
+done
+
+if [[ ! -f "$conf" ]]; then
+	printf "Invalid configuration file"
+	exit 1
+fi
+
 dir=""
 
 dirs=()
@@ -63,23 +88,33 @@ while [[ true ]]; do
 				is_file_busy "$src"
 				if [[ $? == 1 ]]; then
 					printf "(file is busy)\n"
-					printf "y/[n]? "
-					read action
-
-					# Set to default
-					if [[ "$action" != "y" ]]; then
+					if [[ $interactive == 0 ]]; then
+						printf "Skipping\n"
 						action="n"
+					else
+						printf "y/[n]? "
+						read action
+
+						# Set to default
+						if [[ "$action" != "y" ]]; then
+							action="n"
+						fi
 					fi
 				else
-					printf "[y]/n? "
-					read action
-
-					# Set to default
-					if [[ "$action" != "n" ]]; then
+					if [[ $interactive == 0 ]]; then
+						printf "Moving\n"
 						action="y"
+					else
+						printf "[y]/n? "
+						read action
+
+						# Set to default
+						if [[ "$action" != "n" ]]; then
+							action="y"
+						fi
 					fi
 				fi
-				
+
 				if [[ "$action" == "y" ]]; then
 					mk_parentdir "$dst"
 					mv "$src" "$dst"

@@ -1,5 +1,5 @@
 exe_dir="$HOME/.local/bin"
-conf_loc="$HOME/confs/autogyser.conf"
+conf_loc="$HOME/.config/autogyser.conf"
 
 echo -n "Install dir [$exe_dir]: "
 read tmp
@@ -16,7 +16,7 @@ fi
 
 cat <<EOF >"$exe"
 #!/bin/bash
-$PWD/autogyser/main.sh $conf_loc
+$PWD/autogyser/main.sh -c $conf_loc \$@
 EOF
 
 chmod +x "$exe"
