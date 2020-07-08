@@ -1,6 +1,29 @@
 # Autogyser
 
-# Sample configs
+## Install
+```sh
+./install.sh
+```
+## Uninstall
+```sh
+./uninstall.sh
+```
+## Run
+Use config file provided at install and perform default move action automatically
+```sh
+autogyser
+```
+
+Ask for move action
+```sh
+autogyser -i
+```
+
+Override config file
+```sh
+autogyser -c <config_file>
+```
+## Sample configs
 ```sh
 # A variable
 home="\/home\/$USER"
